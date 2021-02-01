@@ -1,20 +1,32 @@
 package controller
 
 import data.Person
-import org.jetbrains.exposed.dao.EntityID
+import helper.Controller.isInputValid
 import schemas.Persons
+import schemas.Persons.createPerson
+import schemas.Persons.getPersons
 import statuspages.InvalidUserException
 import statuspages.ThrowableException
 import validation.PersonValidation.validateInput
 import validation.PersonValidation.validateUserExist
-import java.util.*
 
 object PersonController {
-    fun removePerson(personId: String): Person {
-        if (!validateUserExist(personId.toInt())) throw InvalidUserException()
-        val removedPerson = Persons.deletePerson(personId as EntityID<UUID>)
+    fun removePerson(id: Int): Int {
+        if (!validateUserExist("id", id)) throw InvalidUserException()
 
-        if(!validateInput(removedPerson?.firstname)) throw ThrowableException()
-        return removedPerson
+        return Persons.deletePerson(id)
+    }
+
+    fun addPerson(receivedPerson: Person): Person {
+        val inputs = arrayOf(receivedPerson.firstname, receivedPerson.lastname, receivedPerson.date.toString())
+
+        if (!isInputValid(inputs)) throw ThrowableException()
+        if (validateUserExist("String", receivedPerson.lastname)) throw InvalidUserException()
+
+        return createPerson(receivedPerson)
+    }
+
+    fun returnAllPersons(): Collection<Person> {
+        return getPersons()
     }
 }

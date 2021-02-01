@@ -1,13 +1,15 @@
 package validation
 
-import org.jetbrains.exposed.dao.EntityID
 import schemas.Persons
-import java.util.*
 
 object PersonValidation {
 
-    fun validateUserExist(id: Int): Boolean {
-        if (Persons.personExist(id as EntityID<UUID>)) return true
+    fun <T> validateUserExist(attribute: String, attributeValue: T): Boolean {
+        when(attribute) {
+            "id" -> if (Persons.personExistById(attributeValue as Int)) return true
+            "lastname" -> if (Persons.personExistByLastname(attributeValue.toString())) return true
+        }
+
 
         return false
     }

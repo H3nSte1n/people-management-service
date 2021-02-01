@@ -1,12 +1,12 @@
 package data
 
-import org.jetbrains.exposed.dao.EntityID
+import com.fasterxml.jackson.annotation.JsonFormat
 import org.joda.time.DateTime
-import java.util.*
 
 data class Person(
-    val id: EntityID<UUID>,
+    val id: Int?,
     val firstname: String,
     val lastname: String,
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm a z")
     val date: DateTime
 ) {}

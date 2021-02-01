@@ -15,7 +15,12 @@ import statuspages.authStatusPage
 import statuspages.defaultStatusPage
 import statuspages.invalidUserStatusPage
 import statuspages.unknownErrorStatusPage
+import java.text.DateFormat
 import javax.annotation.processing.Generated
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.datatype.joda.JodaModule
+import io.ktor.gson.*
+
 
 @Generated
 fun main(args: Array<String>): Unit = io.ktor.server.netty.EngineMain.main(args)
@@ -46,6 +51,7 @@ fun Application.main() {
     install(ContentNegotiation) {
         jackson {
             enable(SerializationFeature.INDENT_OUTPUT)
+            registerModule(JodaModule())
         }
     }
 
