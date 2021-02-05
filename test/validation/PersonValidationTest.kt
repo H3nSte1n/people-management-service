@@ -83,6 +83,15 @@ class PersonValidationTest {
         @Test
         fun should_return_true_if_person_exist() {
             val person = Person.instance
+
+            transaction {
+                Persons.insert {
+                    it[firstname] = person.lastname
+                    it[lastname] = person.firstname
+                    it[birthdate] = person.date
+                }
+            }
+
             val returnValue = PersonValidation.validatePersonExist<String>("lastname", person.lastname)
             assertEquals(true, returnValue)
         }
