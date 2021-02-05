@@ -1,6 +1,7 @@
 import api.api
 import com.fasterxml.jackson.databind.SerializationFeature
-import controller.LoginController
+import controller.PersonController
+import data.Person
 import io.ktor.application.*
 import io.ktor.features.*
 import io.ktor.http.*
@@ -10,6 +11,7 @@ import io.ktor.server.testing.*
 import io.mockk.every
 import io.mockk.mockkObject
 import io.mockk.verify
+import org.joda.time.DateTime
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import kotlin.test.BeforeTest
@@ -18,33 +20,34 @@ import kotlin.test.assertEquals
 class AuthenticationTest {
     val body =
         """{"name":"Henry","password":"foobar"}"""
+    val person = Person(0, "foo", "bar", DateTime.now())
 
     @Nested
-    inner class api_v1_sign_in {
-        val path = "/api/v1/sign-in"
+    inner class api_v1_persons {
+        val path = "/api/v1/persons"
 
         @BeforeTest
         fun prepare() {
-            mockkObject(LoginController)
-            every { LoginController.login(any()) } returns "xxx.xxx.xxx"
+            mockkObject(PersonController)
+            every { PersonController.addPerson(any()) } returns person
         }
 
         @Test
-        fun should_call_LoginController_login() {
+        fun should_call_PersonController_addPerson() {
             fun tests(call: TestApplicationCall) {
                 verify {
-                    LoginController.login(any())
+                    PersonController.addPerson(any())
                 }
             }
-            initApplication(::tests, path, body)
+            initApplication(::tests, path, body, HttpMethod.Post)
         }
 
         @Test
-        fun should_respond_jwt_token() {
+        fun should_respond_Person() {
             fun tests(call: TestApplicationCall) {
-                assertEquals("xxx.xxx.xxx", call.response.content)
+                assertEquals(person, call.response.content)
             }
-            initApplication(::tests, path, body)
+            initApplication(::tests, path, body, HttpMethod.Post)
         }
 
         @Test
@@ -52,36 +55,36 @@ class AuthenticationTest {
             fun tests(call: TestApplicationCall) {
                 assertEquals(HttpStatusCode.OK, call.response.status())
             }
-            initApplication(::tests, path, body)
+            initApplication(::tests, path, body, HttpMethod.Post)
         }
     }
 
     @Nested
     inner class api_v1_sign_up {
-        val path = "/api/v1/sign-up"
+        val path = "/api/v1/persons/{id}"
 
         @BeforeTest
         fun prepare() {
-            mockkObject(RegisterController)
-            every { RegisterController.register(any()) } returns "xxx.xxx.xxx"
+            mockkObject(PersonController)
+            every { PersonController.removePerson(any()) } returns 1
         }
 
         @Test
-        fun should_call_RegisterController_register() {
+        fun should_call_RegisterController_removePerson() {
             fun tests(call: TestApplicationCall) {
                 verify {
-                    RegisterController.register(any())
+                    PersonController.removePerson(any())
                 }
             }
-            initApplication(::tests, path, body)
+            initApplication(::tests, path, body, HttpMethod.Delete)
         }
 
         @Test
-        fun should_respond_jwt_token() {
+        fun should_respond_count_of_deleted_persons() {
             fun tests(call: TestApplicationCall) {
-                assertEquals("xxx.xxx.xxx", call.response.content)
+                assertEquals(1, call.response.content)
             }
-            initApplication(::tests, path, body)
+            initApplication(::tests, path, body, HttpMethod.Delete)
         }
 
         @Test
@@ -89,11 +92,11 @@ class AuthenticationTest {
             fun tests(call: TestApplicationCall) {
                 assertEquals(HttpStatusCode.OK, call.response.status())
             }
-            initApplication(::tests, path, body)
+            initApplication(::tests, path, body, HttpMethod.Delete)
         }
     }
 
-    private fun initApplication(tests: (call: TestApplicationCall) -> Unit, path: String, body: String) {
+    private fun initApplication(tests: (call: TestApplicationCall) -> Unit, path: String, body: String, httpVerb: HttpMethod) {
         withTestApplication {
             application.routing {
                 api()
@@ -105,7 +108,7 @@ class AuthenticationTest {
                 }
             }
 
-            handleRequest(HttpMethod.Post, path) {
+            handleRequest(httpVerb, path) {
                 addHeader("Accept", "text/plain")
                 addHeader("Content-Type", "application/json; charset=UTF-16")
                 setBody(body.toByteArray(charset = Charsets.UTF_16))

@@ -13,7 +13,7 @@ import kotlin.test.BeforeTest
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 
-class UsersTest : DatabaseConnection() {
+class PersonTest : DatabaseConnection() {
 
     @BeforeTest
     fun prepare() {

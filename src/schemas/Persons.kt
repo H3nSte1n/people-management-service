@@ -45,15 +45,15 @@ object Persons: Table() {
         }
     }
 
-    fun updatePerson(person: Person): Person {
+    fun updatePerson(selectedId: Int, person: Person): Person {
         return transaction {
-            update ({ id eq person.id!! }) {
+            update ({ id eq selectedId }) {
                 it[firstname] = person.firstname
                 it[lastname] = person.lastname
                 it[birthdate] = person.date
             }
         }.let {
-            getPerson(person.id!!)
+            getPerson(selectedId)
         }
     }
 

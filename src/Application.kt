@@ -13,7 +13,7 @@ import io.ktor.jackson.*
 import io.ktor.routing.*
 import statuspages.authStatusPage
 import statuspages.defaultStatusPage
-import statuspages.invalidUserStatusPage
+import statuspages.invalidPersonStatusPage
 import statuspages.unknownErrorStatusPage
 import java.text.DateFormat
 import javax.annotation.processing.Generated
@@ -43,7 +43,7 @@ fun Application.main() {
 
     install(StatusPages) {
         authStatusPage()
-        invalidUserStatusPage()
+        invalidPersonStatusPage()
         defaultStatusPage()
         unknownErrorStatusPage()
     }

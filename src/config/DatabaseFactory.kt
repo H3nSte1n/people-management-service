@@ -15,15 +15,6 @@ object DatabaseFactory {
         database = Database.Companion.connect(config(dotenv))
 
         transaction {
-            exec(
-                """
-                    DO ${'$'}${'$'} BEGIN
-                        CREATE TYPE UserRole AS ENUM ('admin', 'user');
-                    EXCEPTION
-                        WHEN duplicate_object THEN null;
-                    END ${'$'}${'$'};
-                """.trimIndent()
-            )
             SchemaUtils.create(Persons)
         }
     }
