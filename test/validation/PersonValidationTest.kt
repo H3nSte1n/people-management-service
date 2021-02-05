@@ -23,19 +23,6 @@ class PersonValidationTest {
     @Nested
     inner class validatePersonExist : DatabaseConnection() {
 
-        @BeforeTest
-        fun prepare() {
-            val person = Person.instance
-
-            transaction {
-                Persons.insert {
-                    it[firstname] = person.lastname
-                    it[lastname] = person.firstname
-                    it[birthdate] = person.date
-                }
-            }
-        }
-
         @Test
         fun should_run_personExistByLastname_when_call_method_with_lastname() {
             val person = Person.instance
