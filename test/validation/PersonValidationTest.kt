@@ -12,7 +12,7 @@ import org.junit.jupiter.api.*
 import schemas.Persons
 import kotlin.test.assertEquals
 
-class PersonValidationTest {
+class PersonValidationTest : DatabaseConnection() {
 
     @AfterEach
     fun afterTest() {
@@ -20,7 +20,7 @@ class PersonValidationTest {
     }
 
     @Nested
-    inner class validatePersonExist : DatabaseConnection() {
+    inner class validatePersonExist {
 
         @Test
         fun should_run_personExistByLastname_when_call_method_with_lastname() {
