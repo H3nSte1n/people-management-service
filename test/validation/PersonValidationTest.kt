@@ -10,7 +10,6 @@ import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.junit.jupiter.api.*
 import schemas.Persons
-import kotlin.test.BeforeTest
 import kotlin.test.assertEquals
 
 class PersonValidationTest {
