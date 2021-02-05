@@ -1,18 +1,10 @@
 package factories
 
-import com.turnierverwaltung_api_auth.enums.UserRole
 import data.Person
+import org.joda.time.DateTime
 
-object User {
+object Person {
     val instance by lazy {
-        val generatedSalt = Password.generateSalt()
-        Person(
-            null,
-            "foo",
-            "foo@bar.com",
-            Password.generateHash("foo", generatedSalt),
-            generatedSalt,
-            UserRole.admin
-        )
+        Person(0, "foo", "bar", DateTime.now())
     }
 }

@@ -12,7 +12,7 @@ class ControllerTest {
     @Test
     @DisplayName("Should call validateInput with each item in string List")
     fun integrationTestOnIsInputValid() {
-        val inputs = arrayOf("foo", "bar", "foobar", "next", "hello")
+        val inputs = listOf("foo", "bar", "foobar", "next", "hello")
         mockkObject(PersonValidation)
 
         every { PersonValidation.validateInput(String()) } returns true
@@ -27,7 +27,7 @@ class ControllerTest {
     @Test
     @DisplayName("Should return true if all inputs are valid")
     fun testValidRun() {
-        val inputs = arrayOf("foo", "bar", "foobar", "next", "hello")
+        val inputs = listOf("foo", "bar", "foobar", "next", "hello")
         mockkObject(PersonValidation)
 
         every { PersonValidation.validateInput(String()) } returns true
@@ -40,7 +40,7 @@ class ControllerTest {
     @Test
     @DisplayName("Should break up and return false is invalid")
     fun testInvalidRun() {
-        val inputs = arrayOf("foo", "bar", "foobar", " ", "hello")
+        val inputs = listOf("foo", "bar", "foobar", " ", "hello")
         mockkObject(PersonValidation)
 
         every { PersonValidation.validateInput(String()) } returns true

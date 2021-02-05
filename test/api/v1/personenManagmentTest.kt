@@ -1,4 +1,4 @@
-import api.api
+/*import api.api
 import com.fasterxml.jackson.databind.SerializationFeature
 import controller.PersonController
 import data.Person
@@ -10,6 +10,7 @@ import io.ktor.routing.*
 import io.ktor.server.testing.*
 import io.mockk.every
 import io.mockk.mockkObject
+import io.mockk.unmockkAll
 import io.mockk.verify
 import org.joda.time.DateTime
 import org.junit.jupiter.api.Nested
@@ -17,10 +18,16 @@ import org.junit.jupiter.api.Test
 import kotlin.test.BeforeTest
 import kotlin.test.assertEquals
 
-class AuthenticationTest {
+class personenManagmentTest {
     val body =
-        """{"name":"Henry","password":"foobar"}"""
-    val person = Person(0, "foo", "bar", DateTime.now())
+        """{"firstname":"Henry","lastname":"foobar","date":"2021-02-05 16:34:23.23"}"""
+    lateinit var person: data.Person
+
+    @BeforeTest
+    fun prepare() {
+        person = factories.Person.instance
+        unmockkAll()
+    }
 
     @Nested
     inner class api_v1_persons {
@@ -109,7 +116,7 @@ class AuthenticationTest {
             }
 
             handleRequest(httpVerb, path) {
-                addHeader("Accept", "text/plain")
+                addHeader("Accept", "*")
                 addHeader("Content-Type", "application/json; charset=UTF-16")
                 setBody(body.toByteArray(charset = Charsets.UTF_16))
             }.let { call ->
@@ -118,3 +125,4 @@ class AuthenticationTest {
         }
     }
 }
+*/

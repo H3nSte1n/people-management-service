@@ -1,25 +1,25 @@
 package controller
 
-import factories.User
+import factories.Person
 import helper.Controller
 import io.mockk.*
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
-import schemas.Users
-import statuspages.AuthenticationException
-import statuspages.InvalidUserException
+import schemas.Persons
+import statuspages.InvalidPersonException
 import statuspages.ThrowableException
 import validation.PersonValidation
 import kotlin.test.BeforeTest
+import kotlin.test.assertEquals
 
-class LoginControllerTest {
+class PersonenControllerTest {
     lateinit var person: data.Person
 
     @BeforeTest
     fun prepare() {
-        person = User.instance
+        person = Person.instance
         unmockkAll()
     }
 
@@ -29,37 +29,77 @@ class LoginControllerTest {
     }
 
     @Nested
-    inner class when_run_login {
+    inner class when_run_removePerson {
+
+        @Test
+        fun should_call_specific_methods() {
+            mockkObject(PersonValidation)
+            mockkObject(Persons)
+
+            every { PersonValidation.validatePersonExist<Int>(any(), any()) } returns true
+            every { Persons.deletePerson(any()) } returns 1
+
+            PersonController.removePerson(3)
+
+            verify {
+                PersonValidation.validatePersonExist<Int>(any(), any())
+                Persons.deletePerson(any())
+            }
+
+            verifyOrder {
+                PersonValidation.validatePersonExist<Int>(any(), any())
+                Persons.deletePerson(any())
+            }
+        }
+
+        @Test
+        fun should_break_up_if_input_is_invalid() {
+            mockkObject(PersonValidation)
+
+            every { PersonValidation.validatePersonExist<Int>(any(), any()) } returns false
+
+            assertThrows(InvalidPersonException::class.java) {
+                PersonController.removePerson(3)
+            }
+        }
+
+        @Test
+        fun should_return_count_of_removed_Persons_on_valid_request() {
+            mockkObject(PersonValidation)
+            mockkObject(Persons)
+
+            every { PersonValidation.validatePersonExist<Int>(any(), any()) } returns true
+            every { Persons.deletePerson(any()) } returns 1
+
+            assertEquals(PersonController.removePerson(3), 1)
+        }
+    }
+
+    @Nested
+    inner class when_run_addPerson {
 
         @Test
         fun should_call_specific_methods() {
             mockkObject(Controller)
-            mockkObject(Users)
             mockkObject(PersonValidation)
-            mockkObject(Jwt)
+            mockkObject(Persons)
 
             every { Controller.isInputValid(any()) } returns true
-            every { PersonValidation.validateUserExist(any()) } returns true
-            every { Users.findUser(any()) } returns person
-            every { PersonValidation.validateLoginCredentials(any(), any()) } returns true
-            every { Jwt.generateToken(any()) } returns "asd.asd.asd"
+            every { PersonValidation.validatePersonExist<String>(any(), any()) } returns false
+            every { Persons.createPerson(any()) } returns person
 
-            LoginController.login(person)
+            PersonController.addPerson(person)
 
             verify {
                 Controller.isInputValid(any())
-                PersonValidation.validateUserExist(any())
-                Users.findUser(any())
-                PersonValidation.validateLoginCredentials(any(), any())
-                Jwt.generateToken(any())
+                PersonValidation.validatePersonExist<String>(any(), any())
+                Persons.createPerson(any())
             }
 
             verifyOrder {
                 Controller.isInputValid(any())
-                PersonValidation.validateUserExist(any())
-                Users.findUser(any())
-                PersonValidation.validateLoginCredentials(any(), any())
-                Jwt.generateToken(any())
+                PersonValidation.validatePersonExist<String>(any(), any())
+                Persons.createPerson(any())
             }
         }
 
@@ -70,37 +110,126 @@ class LoginControllerTest {
             every { Controller.isInputValid(any()) } returns false
 
             assertThrows(ThrowableException::class.java) {
-                LoginController.login(person)
+                PersonController.addPerson(person)
             }
         }
 
         @Test
-        fun should_break_up_if_user_not_exist() {
+        fun should_break_up_if_person_already_exist() {
             mockkObject(Controller)
             mockkObject(PersonValidation)
 
             every { Controller.isInputValid(any()) } returns true
-            every { PersonValidation.validateUserExist(any()) } returns false
+            every { PersonValidation.validatePersonExist<String>(any(), any()) } returns true
 
-            assertThrows(InvalidUserException::class.java) {
-                LoginController.login(person)
+            assertThrows(InvalidPersonException::class.java) {
+                PersonController.addPerson(person)
             }
         }
 
         @Test
-        fun should_break_up_if_authentication_failed() {
+        fun should_return_added_person_on_valid_request() {
             mockkObject(Controller)
-            mockkObject(Users)
+            mockkObject(PersonValidation)
+            mockkObject(Persons)
+
+            every { Controller.isInputValid(any()) } returns true
+            every { PersonValidation.validatePersonExist<String>(any(), any()) } returns false
+            every { Persons.createPerson(any()) } returns person
+
+            assertEquals(PersonController.addPerson(person), person)
+        }
+    }
+
+    @Nested
+    inner class when_run_getAllPersons {
+
+        @Test
+        fun should_call_specific_method() {
+            mockkObject(Persons)
+
+            every { Persons.getPersons() } returns listOf(person)
+
+            PersonController.getAllPersons()
+
+            verify {
+                Persons.getPersons()
+            }
+        }
+
+        @Test
+        fun should_return_list_of_stored_Persons_on_valid_request() {
+            mockkObject(Persons)
+
+            every { Persons.getPersons() } returns listOf(person)
+
+            assertEquals(PersonController.getAllPersons(), listOf(person))
+        }
+    }
+
+    @Nested
+    inner class when_run_updatePerson {
+
+        @Test
+        fun should_call_specific_method() {
+            mockkObject(Controller)
+            mockkObject(PersonValidation)
+            mockkObject(Persons)
+
+            every { Controller.isInputValid(any()) } returns true
+            every { PersonValidation.validatePersonExist<String>(any(), any()) } returns true
+            every { Persons.updatePerson(any(), any()) } returns person
+
+            PersonController.updatePerson(1, person)
+
+            verify {
+                Controller.isInputValid(any())
+                PersonValidation.validatePersonExist<String>(any(), any())
+                Persons.updatePerson(any(), any())
+            }
+
+            verifyOrder {
+                Controller.isInputValid(any())
+                PersonValidation.validatePersonExist<String>(any(), any())
+                Persons.updatePerson(any(), any())
+            }
+        }
+
+        @Test
+        fun should_break_up_if_input_is_invalid() {
+            mockkObject(Controller)
+
+            every { Controller.isInputValid(any()) } returns false
+
+            assertThrows(ThrowableException::class.java) {
+                PersonController.updatePerson(1, person)
+            }
+        }
+
+        @Test
+        fun should_break_up_if_person_not_exist() {
+            mockkObject(Controller)
             mockkObject(PersonValidation)
 
             every { Controller.isInputValid(any()) } returns true
-            every { PersonValidation.validateUserExist(any()) } returns true
-            every { Users.findUser(any()) } returns person
-            every { PersonValidation.validateLoginCredentials(any(), any()) } returns false
+            every { PersonValidation.validatePersonExist<String>(any(), any()) } returns false
 
-            assertThrows(AuthenticationException::class.java) {
-                LoginController.login(person)
+            assertThrows(InvalidPersonException::class.java) {
+                PersonController.updatePerson(1, person)
             }
+        }
+
+        @Test
+        fun should_return_updated_person_on_valid_request() {
+            mockkObject(Controller)
+            mockkObject(PersonValidation)
+            mockkObject(Persons)
+
+            every { Controller.isInputValid(any()) } returns true
+            every { PersonValidation.validatePersonExist<String>(any(), any()) } returns true
+            every { Persons.updatePerson(any(), any()) } returns person
+
+            assertEquals(PersonController.updatePerson(1, person), person)
         }
     }
 }

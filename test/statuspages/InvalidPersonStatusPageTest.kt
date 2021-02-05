@@ -17,11 +17,11 @@ class InvalidPersonStatusPageTest {
         fun response_status_and_message() {
             withTestApplication {
                 application.install(StatusPages) {
-                    invalidUserStatusPage()
+                    invalidPersonStatusPage()
                 }
                 application.routing {
                     get("/exception") {
-                        throw InvalidUserException()
+                        throw InvalidPersonException()
                     }
                 }
 
@@ -32,9 +32,9 @@ class InvalidPersonStatusPageTest {
                         "Should return status code 400"
                     )
                     assertEquals(
-                        InvalidUserException().message,
+                        InvalidPersonException().message,
                         call.response.content,
-                        "Should return error message from InvalidUserException"
+                        "Should return error message from InvalidPersonException"
                     )
                 }
             }
