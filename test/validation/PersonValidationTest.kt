@@ -10,6 +10,7 @@ import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.junit.jupiter.api.*
 import schemas.Persons
+import kotlin.test.BeforeTest
 import kotlin.test.assertEquals
 
 class PersonValidationTest {
@@ -22,7 +23,7 @@ class PersonValidationTest {
     @Nested
     inner class validatePersonExist : DatabaseConnection() {
 
-        @BeforeEach
+        @BeforeTest
         fun prepare() {
             val person = Person.instance
 
