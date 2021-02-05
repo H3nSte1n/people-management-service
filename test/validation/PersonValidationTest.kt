@@ -12,7 +12,7 @@ import org.junit.jupiter.api.*
 import schemas.Persons
 import kotlin.test.assertEquals
 
-class PersonValidationTest : DatabaseConnection() {
+class PersonValidationTest {
 
     @AfterEach
     fun afterTest() {
@@ -20,7 +20,7 @@ class PersonValidationTest : DatabaseConnection() {
     }
 
     @Nested
-    inner class validatePersonExist {
+    inner class validatePersonExist : DatabaseConnection() {
 
         @Test
         fun should_run_personExistByLastname_when_call_method_with_lastname() {
@@ -70,15 +70,17 @@ class PersonValidationTest : DatabaseConnection() {
         fun should_return_true_if_person_exist() {
             val person = Person.instance
 
-            transaction {
+            val storedPerson = transaction {
                 Persons.insert {
-                    it[firstname] = person.lastname
-                    it[lastname] = person.firstname
+                    it[firstname] = person.firstname
+                    it[lastname] = person.lastname
                     it[birthdate] = person.date
                 }
-            }
+                }.let {
+                    data.Person(it[Persons.id], it[Persons.firstname], it[Persons.lastname], it[Persons.birthdate])
+                }
 
-            val returnValue = PersonValidation.validatePersonExist<String>("lastname", person.lastname)
+            val returnValue = PersonValidation.validatePersonExist<String>("lastname", storedPerson.lastname)
             assertEquals(true, returnValue)
         }
 
