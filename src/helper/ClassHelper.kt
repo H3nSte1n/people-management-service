@@ -7,7 +7,7 @@ object ClassHelper {
         return property.get(instance).toString()
     }
 
-    fun <T>getAllPropertyValues(instance: Any): MutableList<T> {
+    fun <T> getAllPropertyValues(instance: Any): MutableList<T> {
         var inputs: MutableList<String> = ArrayList()
         instance::class.memberProperties.forEach {
             val propertyValue = getPropertyValue(instance, it as KProperty1<Any, *>)

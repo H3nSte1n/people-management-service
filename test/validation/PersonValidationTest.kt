@@ -88,7 +88,7 @@ class PersonValidationTest {
 
         @Test
         fun should_return_false_if_person_not_exist() {
-            val returnValue = PersonValidation.validatePersonExist<String>("lastname","foobar")
+            val returnValue = PersonValidation.validatePersonExist<String>("lastname", "foobar")
             assertEquals(false, returnValue)
         }
     }

@@ -5,7 +5,7 @@ import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.joda.time.DateTime
 
-object Persons: Table() {
+object Persons : Table() {
     val id: Column<Int> = integer("id").autoIncrement()
     val firstname: Column<String> = varchar("firstname", 60)
     val lastname: Column<String> = varchar("lastname", 120)
@@ -47,7 +47,7 @@ object Persons: Table() {
 
     fun updatePerson(selectedId: Int, person: Person): Person {
         return transaction {
-            update ({ id eq selectedId }) {
+            update({ id eq selectedId }) {
                 it[firstname] = person.firstname
                 it[lastname] = person.lastname
                 it[birthdate] = person.date

@@ -2,11 +2,13 @@ package com.people_managment_system
 
 import api.api
 import com.fasterxml.jackson.databind.*
+import com.fasterxml.jackson.datatype.joda.JodaModule
 import com.papsign.ktor.openapigen.OpenAPIGen
 import config.DatabaseFactory
 import io.github.cdimascio.dotenv.dotenv
 import io.ktor.application.*
 import io.ktor.features.*
+import io.ktor.gson.*
 import io.ktor.http.*
 import io.ktor.http.content.*
 import io.ktor.jackson.*
@@ -15,12 +17,7 @@ import statuspages.authStatusPage
 import statuspages.defaultStatusPage
 import statuspages.invalidPersonStatusPage
 import statuspages.unknownErrorStatusPage
-import java.text.DateFormat
 import javax.annotation.processing.Generated
-import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.datatype.joda.JodaModule
-import io.ktor.gson.*
-
 
 @Generated
 fun main(args: Array<String>): Unit = io.ktor.server.netty.EngineMain.main(args)

@@ -5,11 +5,10 @@ import schemas.Persons
 object PersonValidation {
 
     fun <T> validatePersonExist(attribute: String, attributeValue: T): Boolean {
-        when(attribute) {
+        when (attribute) {
             "id" -> if (Persons.personExistById(attributeValue as Int)) return true
             "lastname" -> if (Persons.personExistByLastname(attributeValue.toString())) return true
         }
-
 
         return false
     }

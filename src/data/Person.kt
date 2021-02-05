@@ -9,4 +9,4 @@ data class Person(
     val lastname: String,
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm a z")
     val date: DateTime
-) {}
+)

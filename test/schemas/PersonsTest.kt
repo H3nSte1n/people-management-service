@@ -99,7 +99,7 @@ class PersonsTest : DatabaseConnection() {
         lateinit var persistedPerson: Person
 
         @BeforeEach
-        fun prepare(){
+        fun prepare() {
             persistedPerson = createAndStorePerson()
         }
 
@@ -121,7 +121,7 @@ class PersonsTest : DatabaseConnection() {
         lateinit var persistedPerson: Person
 
         @BeforeEach
-        fun prepare(){
+        fun prepare() {
             persistedPerson = createAndStorePerson()
         }
 
@@ -146,14 +146,17 @@ class PersonsTest : DatabaseConnection() {
         lateinit var persistedPerson: Person
 
         @BeforeEach
-        fun prepare(){
+        fun prepare() {
             persistedPerson = createAndStorePerson()
         }
 
         @Test
         fun should_update_person_if_exists() {
             val newPersonData = Person(
-                null, "hallo", "foobar", DateTime.now()
+                null,
+                "hallo",
+                "foobar",
+                DateTime.now()
             )
             val updatedPerson = Persons.updatePerson(persistedPerson.id!!, newPersonData)
 

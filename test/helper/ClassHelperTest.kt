@@ -1,4 +1,1 @@
-class ClassHelperTest {
-
-
-}
+class ClassHelperTest

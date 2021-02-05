@@ -5,7 +5,6 @@ import data.Person
 import helper.Controller.isInputValid
 import schemas.Persons
 import schemas.Persons.createPerson
-import schemas.Persons.getPerson
 import schemas.Persons.getPersons
 import statuspages.InvalidPersonException
 import statuspages.ThrowableException
