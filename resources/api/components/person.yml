@@ -15,7 +15,15 @@ definitions:
         type: string
       lastname:
         type: string
-      birthdate:
+      date:
         type: integer
+  RemovedPersons:
+    description: Count of removed Persons
+    required:
+      - count
+    properties:
+      count:
+        type: integer
+
 
 
