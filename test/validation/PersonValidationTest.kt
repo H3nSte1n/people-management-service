@@ -76,9 +76,9 @@ class PersonValidationTest {
                     it[lastname] = person.lastname
                     it[birthdate] = person.date
                 }
-                }.let {
-                    data.Person(it[Persons.id], it[Persons.firstname], it[Persons.lastname], it[Persons.birthdate])
-                }
+            }.let {
+                data.Person(it[Persons.id], it[Persons.firstname], it[Persons.lastname], it[Persons.birthdate])
+            }
 
             val returnValue = PersonValidation.validatePersonExist<String>("lastname", storedPerson.lastname)
             assertEquals(true, returnValue)
